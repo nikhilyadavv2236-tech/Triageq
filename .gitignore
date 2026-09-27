@@ -1,0 +1,33 @@
+# triageq .gitignore
+
+# Raw NHAMCS data (large files, no credentialing required but not for redistribution)
+data/raw/
+
+# Processed parquet files (regeneratable)
+data/processed/
+
+# Results (regeneratable from configs + master seed)
+results/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Numba cache
+__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp

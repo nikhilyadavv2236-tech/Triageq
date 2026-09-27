@@ -1,0 +1,41 @@
+# E4: Where do real triagers sit? Nurse (IMMEDR) and ML operating points, both
+# scored against rESI-O on the 2021–2022 test years, plugged into the simulator
+# as empirical confusion matrices, plus the ML δ-curve (queue-aware thresholds).
+# Prerequisites: python -m triageq.ml.train / evaluate / thresholds
+# Run: python -m triageq.run --config configs/e4.yaml
+
+experiment: e4
+description: "Real operating points on the break-even map (F3, F5, F9; T4, T7)"
+
+K: 5
+pi: from_data            # survey-weighted rESI-O mix
+tau_min: [5, 15, 30, 60, 120]
+
+service:
+  family: exponential
+  mean_min: 20.0
+  level_multipliers: null
+
+rho: [0.50, 0.60, 0.70, 0.80, 0.85, 0.90, 0.95]
+servers: [5]
+policies: [fifo, np_pq, apq]
+apq_weights: [16.0, 8.0, 4.0, 2.0, 1.0]
+
+# Named operating points from results/e4/operating_points.json (δ-curve added automatically)
+operating_points: [nurse, ml, ml_argmax, ml_ordinal, lr]
+
+# Queue-aware δ: minimise p95 wait of true levels 1–2 subject to
+# p95 wait of true levels 4–5 ≤ harm_cap_ratio × FIFO's
+harm_cap_ratio: 1.5
+
+n_patients:
+  default: 100000
+  high_load: 250000
+  high_load_threshold: 0.9
+
+warmup_frac: 0.10
+replications: 20
+master_seed: 20260925
+
+engine: fast
+output_dir: results/e4/

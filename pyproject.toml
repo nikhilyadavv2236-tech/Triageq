@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "triageq"
+version = "0.1.0"
+description = "Break-even accuracy for ML triage in emergency priority queues"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "pandas>=2.2",
+    "pyarrow>=16",
+    "simpy>=4.1",
+    "numba>=0.59",
+    "scikit-learn>=1.5",
+    "lightgbm>=4.3",
+    "matplotlib>=3.9",
+    "pyyaml>=6",
+    "joblib>=1.4",
+    "tqdm>=4.66",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m not slow')",
+]

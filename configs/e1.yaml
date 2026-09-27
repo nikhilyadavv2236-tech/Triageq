@@ -1,0 +1,38 @@
+﻿# E1: Two-class break-even vs utilization
+# Demonstrates that mean-wait crossing is load-independent (at J=0)
+# but tail/TC crossings ARE load-dependent.
+# Run: python -m triageq.run --config configs/e1.yaml
+
+experiment: e1
+description: "Two-class break-even: does it depend on load? (Figure F2)"
+
+K: 2
+pi: [0.20, 0.80]          # H = 20%, L = 80%
+tau_min: [5, 30]           # τ_1=5 min, τ_2=30 min (two-class)
+
+service:
+  family: exponential
+  mean_min: 20.0
+  level_multipliers: null   # S0: common rate
+
+# Sensitivity/specificity grid (extended below 0.5 so J < 0 is visible in F2)
+sensitivity: [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00]
+specificity:  [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00]
+
+rho: [0.50, 0.60, 0.70, 0.80, 0.85, 0.90, 0.95]
+servers: [1]
+policies: [fifo, np_pq]
+apq_weights: [8.0, 1.0]
+
+n_patients:
+  default: 100000
+  high_load: 250000
+  high_load_threshold: 0.9
+
+warmup_frac: 0.10
+replications: 20
+master_seed: 20260925
+
+engine: fast    # Use Numba for the sweep
+
+output_dir: results/e1/

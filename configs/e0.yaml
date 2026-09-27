@@ -1,0 +1,32 @@
+# E0: Validation experiment (V1–V8)
+# Run: python -m triageq.run --config configs/e0.yaml
+
+experiment: e0
+description: "Simulator validation against analytic formulas (V1–V8)"
+
+K: 5
+pi: [0.01, 0.12, 0.42, 0.35, 0.10]
+tau_min: [5, 15, 30, 60, 120]
+
+service:
+  family: exponential
+  mean_min: 20.0
+  level_multipliers: null   # S0: common rate for analytic baseline
+
+rho: [0.5, 0.7, 0.9]
+servers: [1, 5]
+policies: [fifo, np_pq, apq, oracle]
+apq_weights: [16.0, 8.0, 4.0, 2.0, 1.0]
+
+n_patients:
+  default: 100000
+  high_load: 250000
+  high_load_threshold: 0.9
+
+warmup_frac: 0.10
+replications: 30
+master_seed: 20260925
+
+engine: simpy    # Reference engine for validation
+
+output_dir: results/e0/

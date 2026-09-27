@@ -1,0 +1,104 @@
+# NHAMCS-ED variable mapping: canonical_name -> raw name.
+# `default` applies to every year; `years` overrides it (null = not available that year).
+# Verified against the 2016-2019, 2021, 2022 Stata public-use files (CDC FTP,
+# dataset_documentation/NHAMCS/stata/) and their value labels.
+#
+# Known quirks (handled in nhamcs_load.py / reference.py):
+#   - TEMPF / TEMPDF are stored x10 (981 = 98.1 F).
+#   - PULSE / BPDIAS: 998 = Doppler/palpated (no number) -> NaN.
+#   - HOSPCODE restarts at 1 each year: hospitals are identified by (year, hospcode).
+#   - RFV13D (3-digit RFV) is absent in 2018: derived as RFV1 // 10.
+#   - 2016 DIAGSCRN value labels are inverted in the file; use TOTDIAG < 0 for "item blank".
+#   - LOV absent in 2017.
+
+default:
+  # identifiers / design
+  year: YEAR
+  hospcode: HOSPCODE
+  patwt: PATWT
+  cpsum: CPSUM
+  cstratm: CSTRATM
+  # triage-time
+  vmonth: VMONTH
+  vdayr: VDAYR
+  arrtime: ARRTIME
+  age: AGE
+  sex: SEX
+  residnce: RESIDNCE
+  arrems: ARREMS
+  ambtransfer: AMBTRANSFER
+  tempf: TEMPF
+  pulse: PULSE
+  respr: RESPR
+  bpsys: BPSYS
+  bpdias: BPDIAS
+  popct: POPCT
+  immedr: IMMEDR
+  painscale: PAINSCALE
+  seen72: SEEN72
+  episode: EPISODE
+  injury: INJURY
+  rfv1: RFV1
+  rfv2: RFV2
+  rfv3: RFV3
+  # diagnostic services (post-triage; label construction only)
+  totdiag: TOTDIAG
+  cbc: CBC
+  bmp: BMP
+  cmp: CMP
+  buncreat: BUNCREAT
+  electrol: ELECTROL
+  glucose: GLUCOSE
+  lft: LFT
+  cardenz: CARDENZ
+  bnp: BNP
+  abg: ABG
+  bac: BAC
+  ddimer: DDIMER
+  lactate: LACTATE
+  pttinr: PTTINR
+  otherbld: OTHERBLD
+  bloodcx: BLOODCX
+  urinecx: URINECX
+  urine: URINE
+  toxscren: TOXSCREN
+  ekg: EKG
+  xray: XRAY
+  catscan: CATSCAN
+  mri: MRI
+  ultrasnd: ULTRASND
+  othimage: OTHIMAGE
+  # procedures
+  totproc: TOTPROC
+  bpap: BPAP
+  bladcath: BLADCATH
+  centline: CENTLINE
+  cpr: CPR
+  endoint: ENDOINT
+  incdrain: INCDRAIN
+  ivfluids: IVFLUIDS
+  lumbar: LUMBAR
+  nebuther: NEBUTHER
+  suture: SUTURE
+  # medications / providers
+  numgiv: NUMGIV
+  consult: CONSULT
+  # disposition / outcome
+  waittime: WAITTIME
+  lov: LOV
+  lwbs: LWBS
+  lbtc: LBTC
+  leftama: LEFTAMA
+  doa: DOA
+  dieded: DIEDED
+  tranpsyc: TRANPSYC
+  tranoth: TRANOTH
+  admithos: ADMITHOS
+  obshos: OBSHOS
+  obsdis: OBSDIS
+  admit: ADMIT
+  hdstat: HDSTAT
+
+years:
+  2017:
+    lov: null

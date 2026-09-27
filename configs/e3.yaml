@@ -1,0 +1,71 @@
+# E3: Robustness — service distributions, server count, class mix
+# Run: python -m triageq.run --config configs/e3.yaml
+
+experiment: e3
+description: "Robustness sensitivity analysis (Figure F11, Table T6)"
+
+K: 5
+pi: from_data    # survey-weighted rESI-O mix
+tau_min: [5, 15, 30, 60, 120]
+
+rho: [0.70, 0.90, 0.95]   # plan: 0.7, 0.9; 0.95 added (tail crossings only exist at high load)
+
+# Service variants to sweep
+service_variants:
+  - name: S0_exp_common
+    family: exponential
+    mean_min: 20.0
+    level_multipliers: null
+  - name: S1_exp_leveldep
+    family: exponential
+    mean_min: 20.0
+    level_multipliers: [1.5, 1.3, 1.0, 0.8, 0.6]
+  - name: S2_lognormal
+    family: lognormal
+    mean_min: 20.0
+    cv: 1.5
+    level_multipliers: null
+  - name: S0_fast_10min
+    family: exponential
+    mean_min: 10.0
+    level_multipliers: null
+  - name: S0_slow_40min
+    family: exponential
+    mean_min: 40.0
+    level_multipliers: null
+
+# Single sigma,bias operating point (at break-even neighborhood for rho=0.9)
+sigma:
+  start: 0.0
+  stop: 2.0
+  step: 0.2
+  extra: [2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0, 12.0, 15.0, 20.0]
+bias: [0.0]
+
+servers: [1, 5]
+policies: [fifo, np_pq, apq]
+apq_weights: [16.0, 8.0, 4.0, 2.0, 1.0]
+
+# Extra variants on the S0 service model with a different APQ weight set
+apq_weight_variants:
+  - name: S0_apq_w2
+    weights: [8.0, 4.0, 2.0, 1.5, 1.0]
+
+n_patients:
+  default: 100000
+  high_load: 250000
+  high_load_threshold: 0.9
+
+warmup_frac: 0.10
+replications: 20
+master_seed: 20260925
+
+engine: fast
+
+output_dir: results/e3/
+
+
+# Acuity mix from nurse-assigned IMMEDR instead of rESI-O (S0 service model)
+pi_variants:
+  - name: S0_pi_nurse
+    pi: nurse
