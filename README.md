@@ -100,27 +100,6 @@ make e1
 make sweep
 ```
 
----
-
-## ✅ Milestones
-
-| # | Description | Status |
-|---|---|---|
-| 1 | Setup: repo, env, Makefile, fast tests | ✅ |
-| 2 | Error model (errors.py) | ✅ |
-| 3 | Analytic module (analytic.py) | ✅ (APQ and M/M/c formulas corrected) |
-| 4 | SimPy simulator (sim_simpy.py) | ✅ |
-| 5 | Numba kernel (sim_fast.py) | ✅ O(N·K) rewrite: 250k patients in ~15 ms; K1 passes |
-| 6 | Full validation (E0, V1–V8) | ✅ SimPy engine, 30 reps: all 81 rel. errors < tol; 2 chance CI misses; V8 10/10 |
-| 7 | Two-class E1 | ✅ mean-wait J* ≈ 0 at every ρ; p95 J* rises 0.06 → 0.35 |
-| 8 | Core sweep E2 | ✅ σ grid extended to 20 (tail crossings lie beyond σ = 2) |
-| 9 | Data pipeline (NHAMCS) | ✅ 108,180 visits (2016–19, 2021–22); rESI-O for 99.2% of kept visits; T5 |
-| 10 | Classifier (LR, LightGBM) | ✅ LR / LightGBM / ordinal LightGBM; T3, F6, F10; nurse & ML (σ, b) |
-| 11 | E3/E4/E5 + figures | ✅ E3 (incl. nurse-π variant), E4 (nurse, ML, δ-curve); E5 and P-PQ not run |
-| 12 | Full reproducibility | ◐ every step scripted |
-
----
-
 ## ⚙️ Key Design Decisions
 
 - **Common Random Numbers (CRN):** All policies share the same pre-drawn arrival times, service times, true levels, and noise ε. This makes break-even curves smooth and paired CIs tight.
