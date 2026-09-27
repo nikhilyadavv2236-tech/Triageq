@@ -1,5 +1,8 @@
 # triageq .gitignore
 
+# Paper source (LaTeX, bib, draft zips — not for redistribution)
+paper/
+
 # Raw NHAMCS data (large files, no credentialing required but not for redistribution)
 data/raw/
 

@@ -1,10 +1,49 @@
 # triageq — When Is Imperfect Triage Better Than None?
 
-A Python package implementing the simulation, analytic models, and ML pipeline for the DASA'26 paper:
+A Python package implementing the simulation, analytic models, and ML pipeline for the DASA'26 research:
 
 > **"When Is Imperfect Triage Better Than None? Load-Dependent Break-Even Accuracy for ML Triage in Emergency Priority Queues"**
 
-## Structure
+---
+
+## 📊 Figures
+
+### F1 — System Diagram
+![System Diagram](results/figures/F1_system_diagram.png)
+
+### F2 — Two-Class Break-Even
+![Two-Class Break-Even](results/figures/F2_two_class_breakeven.png)
+
+### F3 — Break-Even Curves (p95, c=5, Severe Under-12)
+![Break-Even p95 c5](results/figures/F3_breakeven_p95_12_c5_severe_under_12.png)
+
+### F4 — TC12 Heatmap (APQ, c=5)
+![TC12 Heatmap APQ](results/figures/F4_tc12_heatmap_apq_c5.png)
+
+### F5 — Accuracy–Wait Trade-off
+![Tradeoff](results/figures/F5_tradeoff.png)
+
+### F6 — Confusion Matrices
+![Confusion Matrices](results/figures/F6_confusion_matrices.png)
+
+### F7 — Validation Parity
+![Validation Parity](results/figures/F7_validation_parity.png)
+
+### F8 — Welch Warm-Up
+![Welch Warmup](results/figures/F8_welch_warmup.png)
+
+### F9 — ECDF Level 2
+![ECDF Level 2](results/figures/F9_ecdf_level2.png)
+
+### F10 — Calibration & ROC
+![Calibration ROC](results/figures/F10_calibration_roc.png)
+
+### F11 — Robustness Tornado
+![Robustness Tornado](results/figures/F11_robustness_tornado.png)
+
+---
+
+## 🗂️ Structure
 
 ```
 triageq/
@@ -34,7 +73,9 @@ triageq/
   Makefile
 ```
 
-## Quick Start
+---
+
+## 🚀 Quick Start
 
 ```bash
 # 1. Create virtual environment
@@ -59,7 +100,9 @@ make e1
 make sweep
 ```
 
-## Milestones
+---
+
+## ✅ Milestones
 
 | # | Description | Status |
 |---|---|---|
@@ -74,52 +117,24 @@ make sweep
 | 9 | Data pipeline (NHAMCS) | ✅ 108,180 visits (2016–19, 2021–22); rESI-O for 99.2% of kept visits; T5 |
 | 10 | Classifier (LR, LightGBM) | ✅ LR / LightGBM / ordinal LightGBM; T3, F6, F10; nurse & ML (σ, b) |
 | 11 | E3/E4/E5 + figures | ✅ E3 (incl. nurse-π variant), E4 (nurse, ML, δ-curve); E5 and P-PQ not run |
-| 12 | Full reproducibility | ◐ every step scripted; `make` not available on this machine |
+| 12 | Full reproducibility | ◐ every step scripted |
 
-## Running on this machine
+---
 
-Windows Application Control blocks venv launchers, so use the uv-managed 3.11
-interpreter directly with packages installed to a target directory:
-
-```powershell
-$py = uv python find 3.11
-uv pip install --python $py --target $env:LOCALAPPDATA\triageq-site -r requirements.txt
-$env:PYTHONPATH = "$env:LOCALAPPDATA\triageq-site;$PWD\src"
-& $py -m triageq.run --config configs/e0.yaml --jobs 8   # ~40 min (SimPy reference engine)
-& $py -m triageq.run --config configs/e1.yaml            # ~5 min
-& $py -m triageq.run --config configs/e2.yaml            # ~10 min on 8 workers
-& $py -m triageq.run --config configs/e3.yaml
-
-# Data + classifier (Stata files from ftp.cdc.gov/.../NHAMCS/stata/ED{year}-stata.zip,
-# unzipped into data/raw/nhamcs/)
-& $py -m triageq.data.nhamcs_load        # canonical columns via configs/nhamcs_variables.yaml
-& $py -m triageq.data.reference          # rESI-O + NHAMCS-ESI labels, π, T5
-& $py -m triageq.ml.train                # ~45 min (80 LightGBM configs)
-& $py -m triageq.ml.evaluate             # T3, confusion matrices, (σ, b), calibration
-& $py -m triageq.ml.thresholds           # δ-curve
-& $py -m triageq.run --config configs/e4.yaml
-& $py -m triageq.figures
-```
-
-`--post-only` (E2, E4) rebuilds summary/break-even tables from the saved
-`*_reps.parquet` without re-simulating.
-
-Note: E2/E3/E4 use `pi: from_data` (survey-weighted rESI-O mix). Results with the
-original placeholder π are kept in `results/e2_placeholder_pi/` and `results/e3_placeholder_pi/`.
-
-Measured runtimes (8 cores): E0 40 min, E1 12 min (3 workers), E2 14 min (8 workers), E3 ~5 min.
-
-## Key Design Decisions
+## ⚙️ Key Design Decisions
 
 - **Common Random Numbers (CRN):** All policies share the same pre-drawn arrival times, service times, true levels, and noise ε. This makes break-even curves smooth and paired CIs tight.
 - **Two engines:** SimPy for correctness (reference, extensions), Numba for speed (sweeps). `test_kernel_equivalence` (K1) ensures they give identical per-patient waits.
 - **Metric of record:** Target compliance (TC₁₂ = P(wait ≤ τₖ) for true levels 1–2), not mean wait. Mean wait is load-independent at break-even (Proposition in Section 5.1); TC is the clinically meaningful metric.
 - **Master seed:** `20260925`. All replications derived via `numpy.random.SeedSequence`.
 
-## References
+---
+
+## 📚 References
 
 - Argon & Ziya (2009) MSOM: priority under imperfect type identification
 - Sun, Argon & Ziya (2022) POMS: when to triage under errors
 - Cobham (1954): non-preemptive priority mean waits
 - Kleinrock (1964, 1965): conservation law, delay-dependent priority
 - Stanford, Taylor & Ziedins (2014): accumulating priority queue for EDs
+
